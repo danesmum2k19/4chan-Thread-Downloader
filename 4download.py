@@ -95,8 +95,8 @@ else:
             elif URL[-4:] == "webm" and acceptWebms == True:
                 wget.download(URL)
                 filesDownloaded = filesDownloaded + 1
-
-        print()
+            #making newline to clean up wget
+            print()
 
         print("Downloaded " + str(filesDownloaded) + " files")
         print("Done")
