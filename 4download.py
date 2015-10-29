@@ -4,6 +4,7 @@ import basc_py4chan
 import wget
 import sys
 import os
+import time
 
 #setting default variables
 boardLetter = "b"
@@ -19,6 +20,18 @@ acceptGIFs = False
 acceptWebms = False
 acceptPNGs = False
 acceptJPGs = False
+
+def acceptCheck(fileURL):
+    filenameExtension = fileURL.split('.')[-1]
+
+    if filenameExtension == "webm" and acceptWebms == True:
+        return True
+    elif filenameExtension == "gif" and acceptGIFs == True:
+        return True
+    elif filenameExtension == "jpg" and acceptJPGs == True:
+        return True
+    elif filenameExtension == "png" and acceptPNGs == True:
+        return True
 
 if len(sys.argv) == 1:
     print("Run ./4download.py --help for help")
@@ -62,6 +75,10 @@ else:
             elif cliArgs[argNumber - 1] == "--output":
                 outputFolder = cliArgs[argNumber]
                 defaultFolder = False
+            elif cliArgs[argNumber - 1] == "--update":
+                updateThread = True
+            elif cliArgs[argNumber - 1] == "--update-num" and updateThread == True:
+                updateNum = int(cliArgs[argNumber])
 
         print("Making connection to 4chan server")
 
@@ -83,20 +100,10 @@ else:
         filesDownloaded = 0
 
         for URL in files:
-            if URL[-3:] == "jpg" and acceptJPGs == True:
+            if acceptCheck(URL) == True:
                 wget.download(URL)
                 filesDownloaded = filesDownloaded + 1
-            elif URL[-3:] == "png" and acceptPNGs == True:
-                wget.download(URL)
-                filesDownloaded = filesDownloaded + 1
-            elif URL[:-3] == "gif" and acceptGIFs == True:
-                wget.download(URL)
-                filesDownloaded = filesDownloaded + 1
-            elif URL[-4:] == "webm" and acceptWebms == True:
-                wget.download(URL)
-                filesDownloaded = filesDownloaded + 1
-            #making newline to clean up wget
-            print()
+                print()
 
         print("Downloaded " + str(filesDownloaded) + " files")
         print("Done")
