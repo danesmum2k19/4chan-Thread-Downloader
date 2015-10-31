@@ -21,6 +21,8 @@ acceptWebms = False
 acceptPNGs = False
 acceptJPGs = False
 
+updateUntil404 = False
+
 def acceptCheck(fileURL):
     filenameExtension = fileURL.split('.')[-1]
 
@@ -48,6 +50,7 @@ else:
         print("--gif (Accepts all GIFs)")
         print("--webm (Accepts all WebMs)")
         print("--output [OUTPUT FOLDER]")
+        print("--update (Updates until 404)")
         print("---------------")
     else:
         cliArgs = sys.argv[1:]
@@ -76,9 +79,7 @@ else:
                 outputFolder = cliArgs[argNumber]
                 defaultFolder = False
             elif cliArgs[argNumber - 1] == "--update":
-                updateThread = True
-            elif cliArgs[argNumber - 1] == "--update-num" and updateThread == True:
-                updateNum = int(cliArgs[argNumber])
+                updateUntil404 = True
 
         print("Making connection to 4chan server")
 
@@ -104,6 +105,17 @@ else:
                 wget.download(URL)
                 filesDownloaded = filesDownloaded + 1
                 print()
+
+        if updateUntil404 == True:
+            while thread.closed == False:
+                time.sleep(2)
+                if thread.closed == False:
+                    thread.update()
+                    files = [loc for loc in thread.files()]
+                    for URL in files[filesDownloaded:]:
+                        if acceptCheck(URL) == True:
+                            wget.download(URL)
+                            filesDownloaded = filesDownloaded + 1
 
         print("Downloaded " + str(filesDownloaded) + " files")
         print("Done")
