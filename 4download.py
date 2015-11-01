@@ -100,22 +100,30 @@ else:
 
         filesDownloaded = 0
 
-        for URL in files:
-            if acceptCheck(URL) == True:
-                wget.download(URL)
-                filesDownloaded = filesDownloaded + 1
-                print()
+        try:
+            for URL in files:
+                if acceptCheck(URL) == True:
+                    wget.download(URL)
+                    filesDownloaded = filesDownloaded + 1
+                    print()
+        except KeyboardInterrupt:
+            print("Initial download loop stopped: KeyboardInterrupt")
+            updateUntil404 = False
 
         if updateUntil404 == True:
-            while thread.closed == False:
-                time.sleep(2)
-                if thread.closed == False:
-                    thread.update()
-                    files = [loc for loc in thread.files()]
-                    for URL in files[filesDownloaded:]:
-                        if acceptCheck(URL) == True:
-                            wget.download(URL)
-                            filesDownloaded = filesDownloaded + 1
+            try:
+                while thread.closed == False:
+                    time.sleep(2)
+                    if thread.closed == False:
+                        thread.update()
+                        files = [loc for loc in thread.files()]
+                        for URL in files[filesDownloaded:]:
+                            if acceptCheck(URL) == True:
+                                wget.download(URL)
+                                filesDownloaded = filesDownloaded + 1
+                                print()
+            except KeyboardInterrupt:
+                print("Update loop stopped: KeyboardInterrupt")
 
         print("Downloaded " + str(filesDownloaded) + " files")
         print("Done")
