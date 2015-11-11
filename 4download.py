@@ -113,7 +113,8 @@ else:
         try:
             for URL in files:
                 if acceptCheck(URL) == True:
-                    downloadFile(URL)
+                    writtenURL = downloadFile(URL)
+                    print("Downloaded file: " + writtenURL)
                     filesDownloaded = filesDownloaded + 1
         except KeyboardInterrupt:
             print("Initial download loop stopped: KeyboardInterrupt")
@@ -128,7 +129,8 @@ else:
                         files = [loc for loc in thread.files()]
                         for URL in files[filesDownloaded:]:
                             if acceptCheck(URL) == True:
-                                downloadFile(URL)
+                                writtenURL = downloadFile(URL)
+                                print("Downloaded file: " + writtenURL)
                                 filesDownloaded = filesDownloaded + 1
             except KeyboardInterrupt:
                 print("Update loop stopped: KeyboardInterrupt")
