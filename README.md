@@ -3,13 +3,13 @@ Downloads files in specified 4chan threads (Non-interactive). Useful for scripts
 
 Designed to run in Python 3 (May work in Python 2 [Not Recommended])
 
-Requires wget and basc_py4chan
+Requires requests and basc_py4chan
 
 Install them with:
 
 >sudo pip install basc_py4chan
 
->sudo pip install wget
+>sudo pip install requests
 
 Run
 >./4download.py --help
