@@ -1,7 +1,7 @@
 #!/bin/python
 
 import basc_py4chan
-import wget
+import requests
 import sys
 import os
 import time
@@ -22,6 +22,16 @@ acceptPNGs = False
 acceptJPGs = False
 
 updateUntil404 = False
+
+def downloadFile(url):
+    requestModule = requests.get(url, stream=True)
+    filename = url.split("/")[-1]
+
+    with open(filename, 'wb') as outFile:
+        for chunk in requestModule.iter_content(chunk_size=1024):
+            if chunk:
+                outFile.write(chunk)
+    return filename
 
 def acceptCheck(fileURL):
     filenameExtension = fileURL.split('.')[-1]
@@ -103,9 +113,8 @@ else:
         try:
             for URL in files:
                 if acceptCheck(URL) == True:
-                    wget.download(URL)
+                    downloadFile(URL)
                     filesDownloaded = filesDownloaded + 1
-                    print()
         except KeyboardInterrupt:
             print("Initial download loop stopped: KeyboardInterrupt")
             updateUntil404 = False
@@ -119,9 +128,8 @@ else:
                         files = [loc for loc in thread.files()]
                         for URL in files[filesDownloaded:]:
                             if acceptCheck(URL) == True:
-                                wget.download(URL)
+                                downloadFile(URL)
                                 filesDownloaded = filesDownloaded + 1
-                                print()
             except KeyboardInterrupt:
                 print("Update loop stopped: KeyboardInterrupt")
 
